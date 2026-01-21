@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Linked List Code Explanation</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+        h1 { font-size: 2.5em; }
+        h2 { font-size: 2em; margin-top: 1.5em; }
+        h3 { font-size: 1.5em; margin-top: 1.5em; }
+        h4 { font-size: 1.2em; margin-top: 1.5em; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; }
+        code {
+            font-family: "Courier New", Courier, monospace;
+        }
+        pre {
+            background-color: #111;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #50fa7b;
+        }
+        hr {
+            border: 0;
+            height: 2px;
+            background-color: #444;
+            margin: 40px 0;
+        }
+        .detail {
+            font-style: italic;
+            color: #aaa;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        .gemini-btn {
+            background-color: #4a4a8a;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s;
+        }
+        .gemini-btn:hover {
+            background-color: #6a6aff;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #fff;
+        }
+        .modal-response {
+            background-color: #111;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            min-height: 100px;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6a6aff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Getting the Hang of Linked Lists: A Code Walkthrough</h1>
+        <h2>A complete explanation of your singly and doubly linked list code.</h2>
+
+        <hr>
+
+        <h2>Singly Linked List (<code>single.cpp</code>)</h2>
+        
+        <h4>The <code>Node</code> Class <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>This is the basic building block. Each node holds a piece of data and a pointer to the next node in the chain. It's the fundamental unit of the list.</p>
+        <pre><code>class Node{
+    public:
+        int data;
+        Node* next;
+
+        Node(int data1){
+            data = data1;
+            next = nullptr;
+        }
+        Node(int data1, Node* next1){
+            data = data1;
+            next = next1;
+        }
+};</code></pre>
+
+        <h4><code>convrertArr2LL</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Turns a vector (like a dynamic array) into a brand new linked list. This is a common way to initialize a list with some starting data.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - It has to loop through every element in the input array once.</p>
+        <pre><code>Node* convrertArr2LL( vector&lt;int&gt; &amp;arr){
+    Node* head = new Node(arr[0]);
+    Node* mover = head;
+    for(int i = 1;i&lt;arr.size(); i++){
+        Node* temp = new Node(arr[i]);
+        mover-&gt;next = temp;
+        mover = temp;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>removeshead</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the first node (the head) of the list. This is a very fast operation.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - It doesn't need to loop through the list; it just reassigns the head pointer.</p>
+        <pre><code>Node* removeshead(Node*head){
+    Node* temp = head;
+    head = head-&gt; next;
+    delete temp;
+    return head;
+}</code></pre>
+
+        <h4><code>removeK</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the node at the k-th position in the list. To do this, it has to travel from the head to the desired position.</p>
+        <p class="detail"><strong>Time Complexity: O(k)</strong> - The time taken depends on how far down the list 'k' is. In the worst case (removing the last element), it's O(n).</p>
+        <pre><code>Node* removeK(Node* head , int k){
+    if(head == NULL) return nullptr;
+    if(k==1){
+        Node* temp = head;
+        head = head-&gt;next;
+        free(temp);
+        return head;
+    }
+    int count = 0;
+    Node* temp = head;
+    Node* prev = NULL;
+    while(temp != NULL){
+        count ++;
+        if (count == k){
+            prev-&gt;next = prev-&gt;next-&gt;next;  //i.e prev-&gt;next-&gt;next = temp-&gt;next;
+            free(temp);
+            break;
+        }
+        prev = temp;
+        temp = temp -&gt; next;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>remove_elemnt</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Finds the first node with a specific value and removes it. This requires searching through the list.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - In the worst-case scenario, it might have to check every single node to find the value.</p>
+        <pre><code>Node* remove_elemnt(Node* head ,int k) {
+    if(head-&gt;data == NULL) return nullptr;
+    if(head-&gt;data == k){
+        Node* temp = head;
+        head = head-&gt;next;
+        free(temp);
+        return head;
+    } 
+    Node* temp = head;
+    Node* prev = NULL;
+    while(temp != NULL){ 
+        if (temp-&gt; data == k){
+            prev-&gt;next = prev-&gt;next-&gt;next;  // prev-&gt;next-&gt;next = temp-&gt;next;
+            free(temp);
+            break;
+        }
+        prev = temp;
+        temp = temp -&gt; next;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>removestail</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the very last node of the list. In a singly linked list, this is inefficient because you have to travel all the way to the second-to-last node to change its `next` pointer.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - It has to traverse the entire list to find the end.</p>
+        <pre><code>Node* removestail(Node* head){
+    if(head == NULL || head-&gt;next == NULL)
+        return NULL;
+    Node* temp = head;
+    while(temp-&gt;next-&gt;next != NULL){
+        temp = temp -&gt;next;
+    }
+    delete temp-&gt; next;
+    temp-&gt;next = nullptr;   
+    return head;
+}</code></pre>
+
+        <h4><code>printLL_and_count</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Goes through the whole list, prints each value, and then prints the total count of nodes. This is a classic traversal operation.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - It must visit every node to print and count it.</p>
+        <pre><code>void printLL_and_count(Node* head){
+    int count = 0;
+    Node* temp = head;
+    while (temp) {
+        cout &lt;&lt; temp-&gt;data &lt;&lt; " ";                  // ??***** TRAVERSAL *******??------------&gt;
+        temp = temp-&gt;next;                            
+        count ++ ;
+    }
+    cout &lt;&lt; endl;
+    cout &lt;&lt; count &lt;&lt; endl;
+}</code></pre>
+
+        <h4><code>checkifthere</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Checks if a certain value exists anywhere in the list.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - Might need to check every node in the worst case.</p>
+        <pre><code>void checkifthere (Node *head , int val){
+    Node* temp = head;
+    while(temp){
+    if(temp-&gt;data == val)
+        cout &lt;&lt; "exists";
+    temp = temp-&gt;next; 
+    }
+}</code></pre>
+
+        <h4><code>insertAtFirst</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Adds a new node to the very beginning of the list. This is one of the main advantages of a linked list, as it's extremely fast.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - It only involves creating a new node and updating the head pointer, no looping required.</p>
+        <pre><code>Node* insertAtFirst(Node* head , int val){
+    Node* temp = new Node(val, head);
+    return temp;
+}</code></pre>
+
+        <h4><code>insertAtLast</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Adds a new node to the very end of the list. Similar to removing the tail, this requires traversing the whole list first.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - You have to get to the end of the list before you can add the new node.</p>
+        <pre><code>Node* insertAtLast(Node* head, int val){
+    if(head == NULL){
+        return new Node(val);
+    }
+    Node* temp = head;
+    while(temp-&gt;next != NULL){
+        temp-&gt; next;
+    }
+    Node* newNode = new Node(val);
+    temp-&gt;next = newNode;
+    return head;
+}</code></pre>
+
+        <h4><code>insertAtK</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Inserts a new node at the k-th position.</p>
+        <p class="detail"><strong>Time Complexity: O(k)</strong> - Requires traversing to the (k-1)th node.</p>
+        <pre><code>Node* insertAtK(Node* head , int val , int k){
+    if(head==NULL){
+        return new Node(val);
+    }
+    if(k == 1){
+        return new Node(val , head);
+    }
+    int count = 0;
+    Node* temp = head;
+    while(temp!= NULL){
+        count++;
+        if(count == k-1){
+            Node* x = new Node(val , temp-&gt;next);
+            temp-&gt; next = x;
+            break;
+        }
+        temp = temp-&gt; next;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>insertAtval</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Tries to insert a new node before a node that has a specific value. <strong>(Note the bug: `if(temp->next->data = val)` should be `==` for comparison!)</strong></p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - May need to search the entire list.</p>
+        <pre><code>Node* insertAtval(Node* head , int val){
+    if(head==NULL){
+        return NULL;
+    }
+    if(head-&gt;data==val){
+        return new Node(val , head);
+    }
+    Node* temp = head;
+    while(temp-&gt;next != NULL){
+        if(temp-&gt;next-&gt;data = val){
+            Node* x = new Node(val , temp-&gt;next);
+            temp-&gt; next = x;
+            break;
+        }
+        temp = temp-&gt; next;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>main</code> (from single.cpp) <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>The main function where you run and test your code.</p>
+        <pre><code>int main(){
+    vector&lt;int&gt; arr = {1,2,3,4,5};
+    Node* head = convrertArr2LL(arr);
+    // printLL_and_count(head);
+    // checkifthere(head , 4);
+    // head = removeshead(head);
+    // printLL_and_count(head);
+    // head =  remove_elemnt(head , 4);
+    head = insertAtval(head , 2);
+    printLL_and_count(head);
+}</code></pre>
+
+        <hr>
+
+        <h2>Doubly Linked List (<code>doubly.cpp</code>)</h2>
+        
+        <h4>The <code>Node</code> Class <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>This node is a bit more advanced. It has a pointer to the <code>next</code> node and also a pointer to the <code>back</code> (previous) node. This two-way link is what makes it "doubly" linked.</p>
+        <pre><code>class Node{
+    public:
+        int data;
+        Node* next;
+        Node* back;
+
+        Node(int data1){
+            data = data1;
+            next = nullptr;
+            back = nullptr;
+        }
+        Node(int data1, Node* next1 , Node* back1){
+            data = data1;
+            next = next1;
+            back = back1;
+        }
+};</code></pre>
+
+        <h4><code>convertArr2DLL</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Turns a vector into a doubly linked list, making sure to link nodes in both directions.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - Just like the singly linked version, it must iterate through the whole array.</p>
+        <pre><code>Node* convertArr2DLL(vector &lt;int&gt; &amp;arr){
+    Node*head = new Node(arr[0]);
+    Node* prev = head;
+    for(int i = 1 ; i&lt;arr.size(); i++){
+        Node* temp = new Node(arr[i], nullptr , prev);
+        prev -&gt;next = temp;
+        prev = temp;
+    }
+    return head;
+}</code></pre>
+
+        <h4><code>deleteHead</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the first node and makes sure the new head's `back` pointer is null.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - Very efficient, no traversal needed.</p>
+        <pre><code>Node* deleteHead(Node* head){
+    if(head== NULL || head-&gt;next ==NULL)
+        return NULL;
+
+    Node* prev = head;
+    head = head-&gt;next;
+
+    head-&gt;back = nullptr;
+    prev-&gt; next = nullptr;
+
+    return(head);
+    free(prev);
+}</code></pre>
+
+        <h4><code>deletetail</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the last node of the list. This is much more efficient in a doubly linked list because you can instantly access the second-to-last node from the tail.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - Your current implementation still traverses from the head. A more optimal version would keep a separate `tail` pointer, making this an O(1) operation.</p>
+        <pre><code>Node* deletetail(Node* head){
+    if(head== NULL || head-&gt;next ==NULL)
+        return NULL;
+    Node* tail = head;
+    while(tail-&gt;next != NULL){
+        tail = tail-&gt;next;
+    }
+    Node* newtail = tail-&gt;back;
+    newtail-&gt;next = nullptr;
+    tail-&gt;back = nullptr;
+    delete tail;
+    return head;
+}</code></pre>
+
+        <h4><code>deleteKthElement</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Removes the node at the k-th position. The logic is cleaner than the singly linked version because once you find the node, you can easily access its previous (`back`) and next (`front`) neighbors to re-link them.</p>
+        <p class="detail"><strong>Time Complexity: O(k)</strong> - Still requires traversing to the k-th element.</p>
+        <pre><code>Node* deleteKthElement(Node* head , int k){
+    if(head==NULL){
+        return NULL;
+    }
+    int count = 0;
+    Node* temp = head;
+    while(temp != NULL){
+        count ++;
+        if(count == k) break;
+        temp = temp -&gt;next;
+     }
+    Node* prev = temp-&gt;back;
+    Node* front = temp-&gt;next;
+
+    if(prev == NULL &amp;&amp; front == NULL){
+        return NULL;
+    }
+    else if(prev == NULL){
+        return deleteHead(head);
+    }
+    else if(front == NULL)
+        return deletetail(head);
+    
+    prev-&gt;next = front;
+    front-&gt;back = prev;
+
+    temp-&gt;next = nullptr;
+    temp-&gt;back = nullptr;
+    free(temp);
+
+    return (head);
+}</code></pre>
+
+        <h4><code>deleteNode</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>A helper function to delete a specific node when you already have a pointer to it.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - Extremely fast as you already know the node's location.</p>
+        <pre><code>void deleteNode(Node* temp){
+    Node* front = temp-&gt;next;
+    Node* prev = temp-&gt;back;
+
+    if(front == NULL){
+        prev-&gt;next = nullptr;
+        temp-&gt;back = nullptr;
+        free(temp);
+        return;
+    }
+
+    prev -&gt; next = front;
+    prev -&gt; back = prev;
+
+    temp-&gt;next = temp-&gt;back = nullptr;
+    free(temp);
+}</code></pre>
+
+        <h4><code>insertBeforeHead</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Adds a new node to the front of the list.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - A constant time operation.</p>
+        <pre><code>Node* insertBeforeHead(Node* head , int val){
+    Node* newNode = new Node(val , head , nullptr);
+    head-&gt;back = newNode;
+
+    return newNode;
+}</code></pre>
+
+        <h4><code>insertBeforeTail</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Inserts a new node right before the last node of the list.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - Requires traversing to the end of the list first.</p>
+        <pre><code>Node* insertBeforeTail(Node* head , int val){
+    if(head-&gt; next == NULL)
+        return insertBeforeHead(head , val);
+    Node* tail = head;
+    while(tail-&gt; next != NULL){
+        tail = tail-&gt; next ;
+    }
+    Node* prev = tail-&gt;back;
+    Node* newNode = new Node(val, tail , prev);
+    prev -&gt;next = newNode;
+    tail -&gt; back = newNode;
+
+    return head;
+}</code></pre>
+
+        <h4><code>insertBeforeK</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Inserts a new node before the k-th position.</p>
+        <p class="detail"><strong>Time Complexity: O(k)</strong> - Depends on the position 'k'.</p>
+        <pre><code>Node* insertBeforeK(Node* head , int k , int val ){
+    if(k == 1){
+        insertBeforeHead(head , val);
+    }
+    Node* temp = head;
+    int count = 0 ;
+    while(temp != NULL){
+        count ++;
+        if(count == k)
+            break;
+        temp  = temp-&gt;next;
+    }
+    Node* prev = temp-&gt;back;
+    Node* newNode = new Node(val, temp , prev);
+    temp-&gt;back = newNode;
+    prev-&gt;next = newNode;
+
+    return head;
+}</code></pre>
+
+        <h4><code>insertBeforeNode</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Inserts a new node before a specific node that you provide a pointer to.</p>
+        <p class="detail"><strong>Time Complexity: O(1)</strong> - Very efficient as you don't need to search for the node.</p>
+        <pre><code>void insertBeforeNode(Node* temp , int val){
+    Node* prev = temp-&gt;back;
+    Node* newNode = new Node(val , temp , prev);
+    temp-&gt;back = newNode;
+    prev-&gt;next = newNode;
+}</code></pre>
+
+        <h4><code>print2DLL</code> <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>Prints all the values in the doubly linked list from start to finish.</p>
+        <p class="detail"><strong>Time Complexity: O(n)</strong> - Must visit every node.</p>
+        <pre><code>void print2DLL(Node* head){
+    while(head != NULL){
+        cout &lt;&lt; head -&gt; data &lt;&lt; " ";
+        head = head -&gt; next;
+    }
+}</code></pre>
+
+        <h4><code>main</code> (from doubly.cpp) <button class="gemini-btn">✨ Explain with AI</button></h4>
+        <p>The main function where you run and test your doubly linked list code.</p>
+        <pre><code>int main(){
+    vector &lt;int&gt; arr = {1,2,3,4,5};
+    Node* head = convertArr2DLL(arr);
+    insertBeforeNode(head-&gt;next, 10);
+    print2DLL(head);
+}</code></pre>
+
+    </div>
+
+    <!-- Gemini Modal -->
+    <div id="gemini-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Ask Gemini about this code:</h3>
+            <pre><code id="modal-code"></code></pre>
+            <div id="modal-actions" style="margin-top: 15px;">
+                 <input type="text" id="custom-prompt" placeholder="Or ask your own question..." style="width: 100%; padding: 8px; border-radius: 4px; background-color: #333; color: #fff; border: 1px solid #555;">
+                 <button id="submit-custom-prompt" class="gemini-btn" style="margin-top: 10px;">Submit</button>
+            </div>
+            <div id="modal-response" class="modal-response">
+                Click a button to get an explanation.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('gemini-modal');
+            const modalClose = document.querySelector('.modal-close');
+            const modalCode = document.getElementById('modal-code');
+            const modalResponse = document.getElementById('modal-response');
+            const customPromptInput = document.getElementById('custom-prompt');
+            const submitCustomPromptBtn = document.getElementById('submit-custom-prompt');
+            
+            let currentCode = '';
+
+            document.querySelectorAll('.gemini-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const header = e.target.closest('h4');
+                    const pre = header.nextElementSibling.nextElementSibling;
+                    currentCode = pre.querySelector('code').innerText;
+                    
+                    modalCode.innerText = currentCode;
+                    modalResponse.innerHTML = "Ask a question or select a prompt.";
+                    customPromptInput.value = '';
+                    modal.style.display = 'flex';
+                });
+            });
+
+            modalClose.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            submitCustomPromptBtn.addEventListener('click', () => {
+                const userPrompt = customPromptInput.value;
+                if (userPrompt) {
+                    callGeminiAPI(userPrompt, currentCode);
+                }
+            });
+
+            async function callGeminiAPI(prompt, code) {
+                modalResponse.innerHTML = '<div class="loader"></div>';
+                
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const fullPrompt = `${prompt}\n\nHere is the C++ code snippet:\n\`\`\`cpp\n${code}\n\`\`\``;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: fullPrompt }] }]
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const text = result.candidates[0].content.parts[0].text;
+                    modalResponse.innerText = text;
+
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    modalResponse.innerText = "Sorry, something went wrong while contacting the AI. Please check the console for details.";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
